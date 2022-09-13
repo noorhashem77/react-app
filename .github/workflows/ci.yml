@@ -46,5 +46,5 @@ jobs:
         if: github.event_name == 'push'
         run: npx surge --project ./build --domain bored-degree.surge.sh
         env:
-          SURGE_LOGIN: ${{ secrets.SURGE_LOGIN }}
-          SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
+          login: ${{ secrets.SURGE_LOGIN }}
+          token: ${{ secrets.SURGE_TOKEN }}
