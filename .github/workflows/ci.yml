@@ -23,9 +23,19 @@ jobs:
       - run: npm test -- --coverage
         env:
           CI: true
+      - name: Upload test coverage
+        uses: actions/upload-artifact@v3
+        with:
+          name: code-coverage
+          path: coverage
       - name: build project
         if: github.event_name == 'push'
         run: npm run build
+      - name: Upload Build Folder
+        uses: actions/upload-artifact@v3
+        with:
+          name: build
+          path: build
       - name: deploy to Staging
         if: github.event_name == 'push'
         run: npx surge --project ./build --domain bored-degree.surge.sh
