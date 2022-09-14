@@ -8,6 +8,9 @@ on:
 
 jobs:
   build:
+    env:
+      login: ${{ secrets.SURGE_LOGIN }}
+      token: ${{ secrets.SURGE_TOKEN }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -49,8 +52,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
       - name: deploy to Staging
-        if: github.event_name == 'push'
+        if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
         run: npx surge --project ./build --domain bored-degree.surge.sh
+      - name: deploy to production
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        run: npx surge --project ./build --domain bored-degree.surge.sh
+      - name: Upload coverage report
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        run: codecov
         env:
-          login: ${{ secrets.SURGE_LOGIN }}
-          token: ${{ secrets.SURGE_TOKEN }}
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
